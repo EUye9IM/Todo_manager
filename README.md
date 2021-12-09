@@ -1,2 +1,2 @@
-# Todo_maneger
+# Todo_manager
 win下实现类似Taskwarrior的小东西
