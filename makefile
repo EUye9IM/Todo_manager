@@ -2,7 +2,7 @@ CXX			= g++
 CXX_FLAGS	= -Wall -Werror -O2 -std=c++11
 
 LIBRARIES	= 
-EXECUTABLE	= app.exe
+EXECUTABLE	= task.exe
 
 SRC			= src
 INCLUDE		= include
@@ -18,7 +18,7 @@ all:$(EXECUTABLE)
 
 run: all
 	@cls
-	@cd $(EXECUTABLE)
+	@$(EXECUTABLE)
 
 $(EXECUTABLE):$(OBJS)
 	@cls

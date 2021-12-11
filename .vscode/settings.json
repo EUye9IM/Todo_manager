@@ -1,0 +1,21 @@
+{
+	"files.associations": {
+		"typeinfo": "cpp",
+		"ostream": "cpp",
+		"cstdio": "cpp",
+		"deque": "cpp",
+		"string": "cpp",
+		"vector": "cpp",
+		"functional": "cpp",
+		"type_traits": "cpp",
+		"atomic": "cpp",
+		"*.tcc": "cpp",
+		"compare": "cpp",
+		"numeric": "cpp",
+		"sstream": "cpp",
+		"cmath": "cpp",
+		"array": "cpp",
+		"initializer_list": "cpp",
+		"limits": "cpp"
+	}
+}
