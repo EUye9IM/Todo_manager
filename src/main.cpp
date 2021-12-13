@@ -22,10 +22,18 @@
 // 	free(dec);
 // 	return 0;
 // }
+#include "task/other.hpp"
+#include "task/task.h"
+#include <Windows.h>
+#include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <locale>
 #include <string>
+
 using namespace std;
+const char *TASKFILE = "D:/.task";
+
 void help() {
 	cout << "ussage: task [help|add|list|detail|remove] {...}" << endl;
 	cout << "" << endl;
@@ -38,13 +46,49 @@ void help() {
 	cout << "Remove a task:             task remove <number>" << endl;
 }
 void addTask(string name, string ddl, string info = "") {
-	cout << "add" << name << ddl << info << endl;
+	time_t t = -1;
+	if (str2Time(ddl, t)) {
+		cout << "cannot parse time" << endl;
+		return;
+	}
+	Tasks tasks;
+	readTask(TASKFILE, tasks);
+	tasks.push_back(Task{name, t, info});
+	sort(tasks.begin(), tasks.end(),
+		 [](Task a, Task b) { return a.ddl < b.ddl; });
+	saveTask(TASKFILE, tasks);
 };
-void listTask() { cout << "list" << endl; };
-void taskDetail(string no) { cout << "detail" << no << endl; };
-void removeTask(string no) { cout << "remove" << no << endl; };
+void listTask() {
+	Tasks tasks;
+	readTask(TASKFILE, tasks);
+	printTask(tasks);
+};
+void taskDetail(string no) {
+	Tasks tasks, tasks2;
+	Task t;
+	int num = atoi(no.c_str());
+	readTask(TASKFILE, tasks);
+	if (num < 0 || num >= (int)tasks.size()) {
+		cout << "number is not right" << endl;
+		return;
+	}
+	t = tasks[num];
+	tasks2.push_back(t);
+	printTask(tasks2);
+	cout << "detail:" << endl << t.info << endl << endl;
+};
+void removeTask(string no) {
+	Tasks tasks, tasks2;
+	int num = atoi(no.c_str());
+	readTask(TASKFILE, tasks);
+	if (num < 0 || num >= (int)tasks.size()) {
+		cout << "number is not right" << endl;
+		return;
+	}
+	tasks.erase(tasks.begin() + num);
+	saveTask(TASKFILE, tasks);
+};
 int main(int argc, char *argv[]) {
-
 	do {
 		if (argc < 2) {
 			listTask();
