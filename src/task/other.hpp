@@ -23,5 +23,9 @@ int str2Time(const std::string &str, time_t &out) {
 	now_tm.tm_yday = 0;
 	foo(str, now_tm);
 	out = mktime(&now_tm);
+	if(out < now) {
+		now_tm.tm_year ++;
+		out=mktime(&now_tm);
+	}
 	return 0;
 }

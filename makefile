@@ -2,7 +2,7 @@ CXX			= g++
 CXX_FLAGS	= -Wall -Werror -O2 -std=c++11
 
 LIBRARIES	= 
-EXECUTABLE	= task.exe
+EXECUTABLE	= todo.exe
 
 SRC			= src
 INCLUDE		= include

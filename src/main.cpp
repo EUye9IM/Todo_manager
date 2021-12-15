@@ -32,7 +32,7 @@
 #include <string>
 
 using namespace std;
-const char *TASKFILE = "D:/.task";
+const char *TASKFILE = "D:/.todo";
 
 void help() {
 	cout << "ussage: task [help|add|list|detail|remove] {...}" << endl;
@@ -57,6 +57,7 @@ void addTask(string name, string ddl, string info = "") {
 	sort(tasks.begin(), tasks.end(),
 		 [](Task a, Task b) { return a.ddl < b.ddl; });
 	saveTask(TASKFILE, tasks);
+	printTask(tasks);
 };
 void listTask() {
 	Tasks tasks;
@@ -87,6 +88,7 @@ void removeTask(string no) {
 	}
 	tasks.erase(tasks.begin() + num);
 	saveTask(TASKFILE, tasks);
+	printTask(tasks);
 };
 int main(int argc, char *argv[]) {
 	do {
