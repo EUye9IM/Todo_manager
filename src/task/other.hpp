@@ -2,11 +2,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-static void foo(const std::string &str, tm &ddl) {
+static void foo(const std::string &str, tm &deadline) {
 	char c;
 	std::istringstream ss(str);
-	ss >> ddl.tm_mon >> c >> ddl.tm_mday;
-	ddl.tm_mon -= 1;
+	ss >> deadline.tm_mon >> c >> deadline.tm_mday;
+	deadline.tm_mon -= 1;
 }
 int str2Time(const std::string &str, time_t &out) {
 	if (str == "now") {

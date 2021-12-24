@@ -3,8 +3,8 @@
 #include <vector>
 struct Task {
 	std::string name;
-	std::time_t ddl;
-	std::string info;
+	std::time_t deadline;
+	std::string detail;
 };
 typedef std::vector<Task> Tasks;
 int readTask(const std::string &path, Tasks &tasks);

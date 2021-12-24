@@ -44,18 +44,22 @@ void help() {
 	cout << "List all tasks:            task list" << endl;
 	cout << "Show the task's detail:    task detail <number>" << endl;
 	cout << "Remove a task:             task remove <number>" << endl;
+	cout << "update a task:             task update <number> "
+			"[name|deadline|detail] "
+			"{...}"
+		 << endl;
 }
-void addTask(string name, string ddl, string info = "") {
+void addTask(string name, string deadline, string detail = "") {
 	time_t t = -1;
-	if (str2Time(ddl, t)) {
+	if (str2Time(deadline, t)) {
 		cout << "cannot parse time" << endl;
 		return;
 	}
 	Tasks tasks;
 	readTask(TASKFILE, tasks);
-	tasks.push_back(Task{name, t, info});
+	tasks.push_back(Task{name, t, detail});
 	sort(tasks.begin(), tasks.end(),
-		 [](Task a, Task b) { return a.ddl < b.ddl; });
+		 [](Task a, Task b) { return a.deadline < b.deadline; });
 	saveTask(TASKFILE, tasks);
 	printTask(tasks);
 };
@@ -76,10 +80,10 @@ void taskDetail(string no) {
 	t = tasks[num];
 	tasks2.push_back(t);
 	printTask(tasks2);
-	cout << "detail:" << endl << t.info << endl << endl;
+	cout << "detail:" << endl << t.detail << endl << endl;
 };
 void removeTask(string no) {
-	Tasks tasks, tasks2;
+	Tasks tasks;
 	int num = atoi(no.c_str());
 	readTask(TASKFILE, tasks);
 	if (num < 0 || num >= (int)tasks.size()) {
@@ -90,6 +94,42 @@ void removeTask(string no) {
 	saveTask(TASKFILE, tasks);
 	printTask(tasks);
 };
+void updateTask(string no, string col, string val) {
+
+	Tasks tasks, tasks2;
+	Task t;
+	int num = atoi(no.c_str());
+	readTask(TASKFILE, tasks);
+	if (num < 0 || num >= (int)tasks.size()) {
+		cout << "number is not right" << endl;
+		return;
+	}
+	t = tasks[num];
+	if (col == "name") {
+		t.name = val;
+	} else if (col == "deadline") {
+		time_t tt = -1;
+		if (str2Time(val, tt)) {
+			cout << "cannot parse time" << endl;
+			return;
+		}
+		t.deadline = tt;
+	} else if (col == "detail") {
+		t.detail = val;
+	} else {
+		cout << "usage is not right" << endl;
+		return;
+	}
+	tasks2.push_back(t);
+	tasks.erase(tasks.begin() + num);
+	tasks.push_back(t);
+	sort(tasks.begin(), tasks.end(),
+		 [](Task a, Task b) { return a.deadline < b.deadline; });
+	saveTask(TASKFILE, tasks);
+
+	printTask(tasks2);
+	cout << "detail:" << endl << t.detail << endl << endl;
+}
 int main(int argc, char *argv[]) {
 	do {
 		if (argc < 2) {
@@ -115,15 +155,27 @@ int main(int argc, char *argv[]) {
 				listTask();
 				return 0;
 			} else if (!strcmp(argv[1], "detail")) {
-				if (argc < 3 || argc > 3)
+				if (argc != 3)
 					break;
 				taskDetail(argv[2]);
 				return 0;
 			} else if (!strcmp(argv[1], "remove")) {
-				if (argc < 3 || argc > 3)
+				if (argc != 3)
 					break;
 				removeTask(argv[2]);
 				return 0;
+			} else if (!strcmp(argv[1], "update")) {
+				if (argc == 4)
+					if (!strcmp(argv[3], "detail")) {
+						updateTask(argv[2], "detail", "");
+						return 0;
+					} else
+						break;
+				else if (argc == 5) {
+					updateTask(argv[2], argv[3], argv[4]);
+					return 0;
+				} else
+					break;
 			}
 		}
 	} while (0);

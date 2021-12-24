@@ -10,6 +10,7 @@ win下实现类似Taskwarrior的小东西
 - 查看任务 `todo` 或者 `todo list`
 - 查看任务备注 `todo detail 0`
 - 移除任务 `todo remove 0`
+- 更新任务 `todo update [name|deadline|detail] "值"`
 
 
 ## 设计文档

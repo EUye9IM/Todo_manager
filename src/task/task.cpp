@@ -19,7 +19,7 @@ int printTask(const Tasks &tasks) {
 	printf("\n");
 	for (int i = 0; i < int(tasks.size()); i++) {
 		tm tt;
-		localtime_s(&tt, &tasks[i].ddl);
+		localtime_s(&tt, &tasks[i].deadline);
 		strftime(buf, 64, "%m-%d %Y", &tt);
 		printf(fmt.c_str(), i, tasks[i].name.c_str(), buf);
 	}
@@ -42,12 +42,12 @@ int readTask(const std::string &path, Tasks &tasks) {
 		Task t;
 		std::stringstream ss(line);
 		unsigned char *s1, *s2;
-		ss >> t.name >> t.ddl;
-		ss >> t.info;
+		ss >> t.name >> t.deadline;
+		ss >> t.detail;
 		s1 = b64_decode(t.name.c_str(), t.name.length());
-		s2 = b64_decode(t.info.c_str(), t.info.length());
+		s2 = b64_decode(t.detail.c_str(), t.detail.length());
 		t.name = std::string((char *)s1);
-		t.info = std::string((char *)s2);
+		t.detail = std::string((char *)s2);
 		tasks.push_back(t);
 		free(s1);
 		free(s2);
@@ -62,8 +62,8 @@ int saveTask(const std::string &path, const Tasks &tasks) {
 	for (Task t : tasks) {
 		char *s1, *s2;
 		s1 = b64_encode((const unsigned char *)t.name.c_str(), t.name.length());
-		s2 = b64_encode((const unsigned char *)t.info.c_str(), t.info.length());
-		file << s1 << " " << t.ddl << " " << s2 << std::endl;
+		s2 = b64_encode((const unsigned char *)t.detail.c_str(), t.detail.length());
+		file << s1 << " " << t.deadline << " " << s2 << std::endl;
 		free(s1);
 		free(s2);
 	}
