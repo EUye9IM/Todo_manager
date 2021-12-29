@@ -68,6 +68,11 @@ void listTask() {
 	readTask(TASKFILE, tasks);
 	printTask(tasks);
 };
+void listTaskWithDetail() {
+	Tasks tasks;
+	readTask(TASKFILE, tasks);
+	printTaskWithDetail(tasks);
+};
 void taskDetail(string no) {
 	Tasks tasks, tasks2;
 	Task t;
@@ -152,7 +157,7 @@ int main(int argc, char *argv[]) {
 			} else if (!strcmp(argv[1], "list")) {
 				if (argc > 2)
 					break;
-				listTask();
+				listTaskWithDetail();
 				return 0;
 			} else if (!strcmp(argv[1], "detail")) {
 				if (argc != 3)

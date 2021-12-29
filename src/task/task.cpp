@@ -26,6 +26,33 @@ int printTask(const Tasks &tasks) {
 	printf("\n");
 	return 0;
 }
+int printTaskWithDetail(const Tasks &tasks) {
+	std::string fmt;
+	char buf[64];
+	int namelen = 0;
+	for (Task t : tasks) {
+		if (namelen < int(t.name.length()))
+			namelen = int(t.name.length());
+	}
+	namelen += 10;
+	printf("\n");
+	fmt = "%8s%" + std::to_string(namelen) + "s%12s\n";
+	printf(fmt.c_str(), "No.", "task name", "deadLine");
+	fmt = "%8d%" + std::to_string(namelen) + "s%12s\n";
+	printf("\n");
+	std::string hline(22 + namelen,'-');
+	for (int i = 0; i < int(tasks.size()); i++) {
+		printf("%s\n", hline.c_str());
+		tm tt;
+		localtime_s(&tt, &tasks[i].deadline);
+		strftime(buf, 64, "%m-%d %Y", &tt);
+		printf(fmt.c_str(), i, tasks[i].name.c_str(), buf);
+		printf("detail:\n%s\n\n", tasks[i].detail.c_str());
+	}
+	printf("%s\n", hline.c_str());
+	printf("\n");
+	return 0;
+}
 int readTask(const std::string &path, Tasks &tasks) {
 	tasks.clear();
 	std::ifstream file(path);
@@ -62,7 +89,8 @@ int saveTask(const std::string &path, const Tasks &tasks) {
 	for (Task t : tasks) {
 		char *s1, *s2;
 		s1 = b64_encode((const unsigned char *)t.name.c_str(), t.name.length());
-		s2 = b64_encode((const unsigned char *)t.detail.c_str(), t.detail.length());
+		s2 = b64_encode((const unsigned char *)t.detail.c_str(),
+						t.detail.length());
 		file << s1 << " " << t.deadline << " " << s2 << std::endl;
 		free(s1);
 		free(s2);

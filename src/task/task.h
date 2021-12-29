@@ -10,3 +10,4 @@ typedef std::vector<Task> Tasks;
 int readTask(const std::string &path, Tasks &tasks);
 int saveTask(const std::string &path, const Tasks &tasks);
 int printTask(const Tasks &tasks);
+int printTaskWithDetail(const Tasks &tasks);
