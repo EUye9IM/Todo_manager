@@ -1,5 +1,5 @@
 CXX			= g++
-CXX_FLAGS	= -Wall -Werror -O2 -std=c++11
+CXX_FLAGS	= -Wall -Werror -O2 -std=c++11 -static -static-libgcc
 
 LIBRARIES	= 
 EXECUTABLE	= todo.exe
@@ -40,7 +40,8 @@ build/%.o: src/%.cpp
 .PHONY:clean
 clean:
 	@rmdir /S /Q "$(BUILD)" 2>nul || @echo >nul
-	@del $(EXECUTABLE)
+	@del $(EXECUTABLE) 2>nul || @echo >nul
+
 
 .PHONY:test
 test:
