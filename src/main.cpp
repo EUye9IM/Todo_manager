@@ -44,10 +44,19 @@ void help() {
 	cout << "List all tasks:            task list" << endl;
 	cout << "Show the task's detail:    task detail <number>" << endl;
 	cout << "Remove a task:             task remove <number>" << endl;
-	cout << "update a task:             task update <number> "
+	cout << "Update a task:             task update <number> "
 			"[name|deadline|detail] "
 			"{...}"
 		 << endl;
+	cout << "Clear all task:            task clear iamsuretoclearalltasks"
+		 << endl;
+	cout << endl
+		 << "deadline form:" << endl
+		 << "    mm-dd" << endl
+		 << "    yyyy-mm-dd" << endl
+		 << "    xm" << endl
+		 << "    xw" << endl
+		 << "    xd" << endl;
 }
 void addTask(string name, string deadline, string detail = "") {
 	time_t t = -1;
@@ -96,6 +105,11 @@ void removeTask(string no) {
 		return;
 	}
 	tasks.erase(tasks.begin() + num);
+	saveTask(TASKFILE, tasks);
+	printTask(tasks);
+};
+void clearTask() {
+	Tasks tasks;
 	saveTask(TASKFILE, tasks);
 	printTask(tasks);
 };
@@ -181,6 +195,11 @@ int main(int argc, char *argv[]) {
 					return 0;
 				} else
 					break;
+			} else if (!strcmp(argv[1], "clear")) {
+				if (argc != 3 || strcmp(argv[2], "iamsuretoclearalltasks"))
+					break;
+				clearTask();
+				return 0;
 			}
 		}
 	} while (0);
