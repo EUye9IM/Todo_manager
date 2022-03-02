@@ -43,6 +43,13 @@ int printTaskWithDetail(const Tasks &tasks) {
 	}
 	namelen += 10;
 	printf("\n");
+
+	time_t now = time(nullptr);
+	tm now_tm;
+	localtime_s(&now_tm, &now);
+	strftime(buf, 64, "%m-%d %Y", &now_tm);
+	printf("               Today is %s\n\n", buf);
+	
 	fmt = "%8s%" + std::to_string(namelen) + "s%12s\n";
 	printf(fmt.c_str(), "No.", "task name", "deadLine");
 	fmt = "%8d%" + std::to_string(namelen) + "s%12s\n";
