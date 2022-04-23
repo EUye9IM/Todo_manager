@@ -22,13 +22,22 @@ int printTask(const Tasks &tasks) {
 
 	fmt = "%8s%" + std::to_string(namelen) + "s%12s\n";
 	printf(fmt.c_str(), "No.", "task name", "deadLine");
-	fmt = "%8d%" + std::to_string(namelen) + "s%12s\n";
+	fmt = "%8d%" + std::to_string(namelen) + "s%12s";
 	printf("\n");
 	for (int i = 0; i < int(tasks.size()); i++) {
 		tm tt;
 		localtime_s(&tt, &tasks[i].deadline);
 		strftime(buf, 64, "%m-%d %Y", &tt);
 		printf(fmt.c_str(), i, tasks[i].name.c_str(), buf);
+		if (now < tasks[i].deadline) {
+			if (now_tm.tm_year < tt.tm_year)
+				printf("  +%2d y", tt.tm_year - now_tm.tm_year);
+			else if (tt.tm_mon > now_tm.tm_mon)
+				printf("  +%2d m", tt.tm_mon - now_tm.tm_mon);
+			else if (tt.tm_yday > now_tm.tm_yday)
+				printf("  +%2d d", tt.tm_yday - now_tm.tm_yday);
+		}
+		printf("\n");
 	}
 	printf("\n");
 	return 0;
@@ -49,18 +58,27 @@ int printTaskWithDetail(const Tasks &tasks) {
 	localtime_s(&now_tm, &now);
 	strftime(buf, 64, "%m-%d %Y", &now_tm);
 	printf("               Today is %s\n\n", buf);
-	
+
 	fmt = "%8s%" + std::to_string(namelen) + "s%12s\n";
 	printf(fmt.c_str(), "No.", "task name", "deadLine");
-	fmt = "%8d%" + std::to_string(namelen) + "s%12s\n";
+	fmt = "%8d%" + std::to_string(namelen) + "s%12s";
 	printf("\n");
-	std::string hline(22 + namelen,'-');
+	std::string hline(22 + namelen, '-');
 	for (int i = 0; i < int(tasks.size()); i++) {
 		printf("%s\n", hline.c_str());
 		tm tt;
 		localtime_s(&tt, &tasks[i].deadline);
 		strftime(buf, 64, "%m-%d %Y", &tt);
 		printf(fmt.c_str(), i, tasks[i].name.c_str(), buf);
+		if (now < tasks[i].deadline) {
+			if (now_tm.tm_year < tt.tm_year)
+				printf("  +%2d y", tt.tm_year - now_tm.tm_year);
+			else if (tt.tm_mon > now_tm.tm_mon)
+				printf("  +%2d m", tt.tm_mon - now_tm.tm_mon);
+			else if (tt.tm_yday > now_tm.tm_yday)
+				printf("  +%2d d", tt.tm_yday - now_tm.tm_yday);
+		}
+		printf("\n");
 		printf("detail:\n%s\n\n", tasks[i].detail.c_str());
 	}
 	printf("%s\n", hline.c_str());
