@@ -1,50 +1,39 @@
-CXX			= g++
+CXX			= g++.exe
 CXX_FLAGS	= -Wall -Werror -O2 -std=c++11 -static -static-libgcc
+EX_NAME		:= cpp
 
-LIBRARIES	= 
-EXECUTABLE	= todo.exe
+SRC			:= src
+INCLUDE		:= include
 
-SRC			= src
-INCLUDE		= include
-LIB			= lib
-BUILD		= build
+OUTS	= task.exe
 
+ifeq ($(OS),Windows_NT)
+# PLATFORM = "Windows"
+RM			:= del /s /q /f 
+FIND_FILE	= $(shell dir /b /s /a-d "$(1)\*.$(2)")
+else
+#  PLATFORM = "Unix-Like"
+RM			:= rm -f
+FIND_FILE	= $(shell find $(1) -type f | grep ".$(2)$$" --color=never)
+endif
 
-OBJS		= $(patsubst $(SRC)/%.cpp,$(BUILD)/%.o,$(wildcard $(SRC)/*.cpp $(SRC)/*/*/*.cpp $(SRC)/*/*/*/*.cpp  $(SRC)/*/*.cpp))
+GET_OBJS	= $(patsubst %.$(EX_NAME), %.o,$(call FIND_FILE,$(1),$(EX_NAME)))
+ALL_OBJ		= $(call GET_OBJS,$(SRC))
 
-all:$(EXECUTABLE)
-	@cls
-	@echo Success.
+.PHONY: all clean
+all: $(OUTS)
+	@echo Done
 
-run: all
-	@cls
-	@$(EXECUTABLE)
-
-$(EXECUTABLE):$(OBJS)
-	@cls
+$(OUTS): $(ALL_OBJ)
 	@echo Linking $@
+	@$(CXX) $^ -o $@
 
-	@if not exist $(dir $@) mkdir "$(dir $@)"
-	@$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+%.o: %.$(EX_NAME)
+	@echo Compiling $@
+	@$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -c $< -o $@
 
-
-build/%.o: src/%.cpp 
-	@cls
-	@echo Compiling...
-	@echo $@
-	@echo [$(foreach i,$(OBJS), $(if $(findstring $@, $(i)),*))]
-
-	@if not exist $(dir $@) mkdir "$(dir $@)"
-	@$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) -c $< -o $@
-
-.PHONY:clean
 clean:
-	@rmdir /S /Q "$(BUILD)" 2>nul || @echo >nul
-	@del $(EXECUTABLE) 2>nul || @echo >nul
-
-
-.PHONY:test
-test:
-
-
-
+	@echo remove $(ALL_OBJ)
+	@$(RM) $(ALL_OBJ)
+	@echo remove $(OUTS)
+	@$(RM) $(OUTS)

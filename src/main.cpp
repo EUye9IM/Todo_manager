@@ -1,27 +1,3 @@
-// int main(int argc,char *argv){
-
-// }
-
-// #include "b64/b64.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
-// int main(void) {
-// 	const char *str = "brian the monkey and bradley the kinkajou are friends";
-// 	char *enc = b64_encode((unsigned char *)str, strlen(str));
-
-// 	printf("%s\n", enc);
-// 	// YnJpYW4gdGhlIG1vbmtleSBhbmQgYnJhZGxleSB0aGUga2lua2Fqb3UgYXJlIGZyaWVuZHM=
-
-// 	char *dec = (char *)b64_decode((char *)enc, strlen(enc));
-
-// 	printf("%s\n", dec);
-// 	// brian the monkey and bradley the kinkajou are friends
-// 	free(enc);
-// 	free(dec);
-// 	return 0;
-// }
 #include "task/other.hpp"
 #include "task/task.h"
 #include <Windows.h>
@@ -30,11 +6,13 @@
 #include <iostream>
 #include <locale>
 #include <string>
+#include <stdlib.h>
 
 using namespace std;
-const char *TASKFILE = "D:/.todo";
+char TASKFILE[256];
 
 void help() {
+	cout << "taskfile_path: " << TASKFILE <<endl;
 	cout << "ussage: task [help|add|list|detail|remove] {...}" << endl;
 	cout << "" << endl;
 	cout << "Show this message:         task help" << endl;
@@ -150,6 +128,8 @@ void updateTask(string no, string col, string val) {
 	cout << "detail:" << endl << t.detail << endl << endl;
 }
 int main(int argc, char *argv[]) {
+	strcpy(TASKFILE,getenv("APPDATA"));
+	strcat(TASKFILE,"/.TODO");
 	do {
 		if (argc < 2) {
 			listTask();
